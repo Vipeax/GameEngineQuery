@@ -1,6 +1,6 @@
 namespace GameEngineQuery.Constants.Enumerations
 {
-    internal enum ValveAntiCheat
+    public enum ValveAntiCheat
     {
         Unsecured = 0,
         Secured = 1

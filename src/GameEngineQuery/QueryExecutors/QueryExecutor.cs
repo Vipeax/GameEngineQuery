@@ -2,11 +2,10 @@
 using System.Net;
 using GameEngineQuery.Extensions;
 using GameEngineQuery.Factories;
-using GameEngineQuery.PacketModels;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public abstract class QueryExecutor : IQueryExecutor
+    public abstract class QueryExecutor<P> : IQueryExecutor<P>
     {
         protected readonly IRequestFactory requestFactory;
 
@@ -35,7 +34,7 @@ namespace GameEngineQuery.QueryExecutors
             this.requestFactory = new RequestFactory();
         }
 
-        public abstract ServerInfo GetServerInfo();
+        public abstract P GetServerInfo();
 
         protected abstract byte[] HandleGameEngineQuery(byte[] request);
     }

@@ -2,13 +2,14 @@
 using System.Globalization;
 using ChivStatus.Exceptions;
 using ChivStatus.Helpers;
+using GameEngineQuery.PacketModels;
 using GameEngineQuery.QueryExecutors;
 using Microsoft.AspNetCore.Mvc;
 using JsonResult = ChivStatus.CustomTypes.JsonResult;
 
 namespace ChivStatus.Controllers
 {
-    public abstract class QueryController<T> : Controller where T : IQueryExecutor
+    public abstract class QueryController<T,P> : Controller where T : IQueryExecutor<P> where P : ServerInfo
     {
         protected abstract string KeyFormatStringPrefix { get; }
 
@@ -18,7 +19,7 @@ namespace ChivStatus.Controllers
             var key = string.Format(CultureInfo.InvariantCulture, "{0}-Address({1}:{2})", this.KeyFormatStringPrefix, ip,
                 port);
 
-            return Cache.GetOrStoreInCache(key, () => GetQueryResult(ip, port));
+            return new JsonResult(Cache.GetOrStoreInCache(key, () => GetQueryResult(ip, port)));
         }
 
         // GET api/bf3/12.34.12.34:27015
@@ -28,10 +29,10 @@ namespace ChivStatus.Controllers
             var key = string.Format(CultureInfo.InvariantCulture, "{0}-Address({1})", this.KeyFormatStringPrefix,
                 address);
 
-            return Cache.GetOrStoreInCache(key, () => GetQueryResult(address));
+            return new JsonResult(Cache.GetOrStoreInCache(key, () => GetQueryResult(address)));
         }
 
-        protected virtual JsonResult GetQueryResult(string address)
+        protected virtual P GetQueryResult(string address)
         {
             if (address.Contains(":"))
             {
@@ -42,7 +43,7 @@ namespace ChivStatus.Controllers
                 {
                     try
                     {
-                        return this.Get(splitted[0], port);
+                        return this.GetQueryResult(splitted[0], port);
                     }
                     catch (FormatException)
                     {
@@ -56,21 +57,20 @@ namespace ChivStatus.Controllers
             throw new InvalidAddressFormatException();
         }
 
-        protected virtual JsonResult GetQueryResult(string ip, ushort port)
+        protected virtual P GetQueryResult(string ip, ushort port)
         {
             if (port == 0)
             {
                 throw new InvalidPortException();
             }
 
-            IQueryExecutor queryExecutor = Activator.CreateInstance(typeof(T), ip, port) as IQueryExecutor;
+            IQueryExecutor<P> queryExecutor = Activator.CreateInstance(typeof(T), ip, port) as IQueryExecutor<P>;
 
             if (queryExecutor != null)
             {
                 try
                 {
-                    var serverInfo = queryExecutor.GetServerInfo();
-                    return new JsonResult(serverInfo);
+                    return queryExecutor.GetServerInfo();
                 }
                 catch (FormatException)
                 {

@@ -1,6 +1,6 @@
 namespace GameEngineQuery.Constants.Enumerations
 {
-    internal enum ServerType
+    public enum ServerType
     {
         Dedicated = 'd',
         Client = 'l',

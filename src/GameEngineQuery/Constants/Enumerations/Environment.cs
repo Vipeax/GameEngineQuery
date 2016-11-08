@@ -1,6 +1,6 @@
 namespace GameEngineQuery.Constants.Enumerations
 {
-    internal enum Environment
+    public enum Environment
     {
         Linux = 'l',
         Windows = 'w',

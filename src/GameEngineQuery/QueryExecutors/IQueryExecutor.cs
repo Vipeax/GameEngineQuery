@@ -1,9 +1,7 @@
-﻿using GameEngineQuery.PacketModels;
-
-namespace GameEngineQuery.QueryExecutors
+﻿namespace GameEngineQuery.QueryExecutors
 {
-    public interface IQueryExecutor
+    public interface IQueryExecutor<P>
     {
-        ServerInfo GetServerInfo();
+        P GetServerInfo();
     }
 }

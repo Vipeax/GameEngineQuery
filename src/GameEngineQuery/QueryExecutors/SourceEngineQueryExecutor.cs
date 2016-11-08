@@ -10,7 +10,7 @@ using Environment = GameEngineQuery.Constants.Enumerations.Environment;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public class SourceEngineQueryExecutor : QueryExecutor
+    public class SourceEngineQueryExecutor : QueryExecutor<A2SInfo>
     {
         public SourceEngineQueryExecutor(string ipAddress, ushort port) : base(ipAddress, port)
         {
@@ -20,7 +20,7 @@ namespace GameEngineQuery.QueryExecutors
         {
         }
 
-        public override ServerInfo GetServerInfo()
+        public override A2SInfo GetServerInfo()
         {
             var requestPacket = requestFactory.CreateRequestPacket(RequestPacketType.A2SInfo);
 

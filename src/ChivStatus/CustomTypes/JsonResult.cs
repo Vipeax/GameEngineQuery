@@ -8,7 +8,7 @@ namespace ChivStatus.CustomTypes
 {
     public class JsonResult : Microsoft.AspNetCore.Mvc.JsonResult
     {
-        public JsonResult(string value) : base(value)
+        public JsonResult() : base(string.Empty)
         {
         }
 

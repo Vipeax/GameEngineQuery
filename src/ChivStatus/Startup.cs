@@ -21,6 +21,7 @@ namespace ChivStatus
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
+               
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)

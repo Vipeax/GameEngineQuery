@@ -4,7 +4,7 @@ using Environment = GameEngineQuery.Constants.Enumerations.Environment;
 
 namespace GameEngineQuery.PacketModels
 {
-    internal class A2SInfo : ServerInfo
+    public class A2SInfo : ServerInfo
     {
         public byte Padding { get; set; }
         public byte Padding2 { get; set; }

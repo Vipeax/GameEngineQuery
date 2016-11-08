@@ -26,7 +26,9 @@ namespace GameEngineQuery.Extensions
         {
             try
             {
-               return new Version(buffer.GetNextString(ref i));
+               var version = new Version(buffer.GetNextString(ref i));
+
+                return new Version(version.Major >= 0 ? version.Major : 0, version.Minor >= 0 ? version.Minor : 0, version.Build >= 0 ? version.Build : 0, version.Revision >= 0 ? version.Revision : 0);
             }
             catch (FormatException)
             {
