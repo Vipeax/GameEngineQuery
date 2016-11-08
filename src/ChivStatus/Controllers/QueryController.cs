@@ -9,7 +9,7 @@ using JsonResult = ChivStatus.CustomTypes.JsonResult;
 
 namespace ChivStatus.Controllers
 {
-    public abstract class QueryController<T,P> : Controller where T : IQueryExecutor<P> where P : ServerInfo
+    public abstract class QueryController<TQE,TSI> : Controller where TQE : IQueryExecutor<TSI> where TSI : ServerInfo
     {
         protected abstract string KeyFormatStringPrefix { get; }
 
@@ -32,7 +32,7 @@ namespace ChivStatus.Controllers
             return new JsonResult(Cache.GetOrStoreInCache(key, () => GetQueryResult(address)));
         }
 
-        protected virtual P GetQueryResult(string address)
+        protected virtual TSI GetQueryResult(string address)
         {
             if (address.Contains(":"))
             {
@@ -57,14 +57,14 @@ namespace ChivStatus.Controllers
             throw new InvalidAddressFormatException();
         }
 
-        protected virtual P GetQueryResult(string ip, ushort port)
+        protected virtual TSI GetQueryResult(string ip, ushort port)
         {
             if (port == 0)
             {
                 throw new InvalidPortException();
             }
 
-            IQueryExecutor<P> queryExecutor = Activator.CreateInstance(typeof(T), ip, port) as IQueryExecutor<P>;
+            IQueryExecutor<TSI> queryExecutor = Activator.CreateInstance(typeof(TQE), ip, port) as IQueryExecutor<TSI>;
 
             if (queryExecutor != null)
             {
