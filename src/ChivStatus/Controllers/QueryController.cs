@@ -22,7 +22,6 @@ namespace ChivStatus.Controllers
             return new JsonResult(Cache.GetOrStoreInCache(key, () => GetQueryResult(ip, port)));
         }
 
-        // GET api/bf3/12.34.12.34:27015
         [HttpGet("{address}")]
         public virtual JsonResult Get(string address)
         {

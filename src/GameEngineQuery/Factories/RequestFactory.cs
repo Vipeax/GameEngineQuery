@@ -11,6 +11,8 @@ namespace GameEngineQuery.Factories
             {
                 case RequestPacketType.A2SInfo:
                     return new A2SInfoRequestPacket().CreateRequest();
+                case RequestPacketType.BattlefieldServerInfo:
+                    return new BattlefieldServerInfoPacket().CreateRequest();
                 default:
                     return new byte[0];
             }

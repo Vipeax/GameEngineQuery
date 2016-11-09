@@ -1,7 +1,7 @@
 ﻿namespace GameEngineQuery.QueryExecutors
 {
-    public interface IQueryExecutor<P>
+    public interface IQueryExecutor<TSI>
     {
-        P GetServerInfo();
+        TSI GetServerInfo();
     }
 }

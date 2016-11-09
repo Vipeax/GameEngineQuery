@@ -1,4 +1,6 @@
-﻿namespace GameEngineQuery.Constants
+﻿using GameEngineQuery.Extensions;
+
+namespace GameEngineQuery.Constants
 {
     internal static class Values
     {
@@ -13,6 +15,21 @@
                 // 54 53 6F 75 72 63 65 20 45 6E 67 69 6E 65 20 51 75 65 72 79
                 internal const string RequestPayload = "TSource Engine Query";
                 internal const ushort RequestPacketSize = 25;
+            }
+        }
+
+        internal static class BattlefieldConstants
+        {
+            internal static class ServerInfo
+            {
+                internal static readonly byte[] ServerInfoPacket =
+                {
+                    0x0, 0x0, 0x0, 0x0, 0x1B, 0x0, 0x0, 0x0, 0x01, 0x0, 0x0, 0x0, 0x0A, 0x0, 0x0, 0x0,
+                    (byte) 's', (byte) 'e', (byte) 'r', (byte) 'v', (byte) 'e', (byte) 'r',
+                    (byte) 'I', (byte) 'n', (byte) 'f', (byte) 'o', 0x0
+                };
+
+                internal const ushort ResponsePacketSize = 512;
             }
         }
 

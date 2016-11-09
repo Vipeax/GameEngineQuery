@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChivStatus.Controllers
 {
-    [Route("api/bf3")]
-    public class Battlefield3QueryController : QueryController<Battlefield3QueryExecutor, Battlefield3ServerInfo>
+    [Route("api/bfbc2")]
+    public class BattlefieldBadCompany2QueryController : QueryController<BattlefieldBadCompany2QueryExecutor, BattlefieldBadCompany2ServerInfo>
     {
         protected override string KeyFormatStringPrefix => "BF";
     }

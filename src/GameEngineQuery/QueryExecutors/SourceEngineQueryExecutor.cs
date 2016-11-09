@@ -78,35 +78,36 @@ namespace GameEngineQuery.QueryExecutors
 
         protected override byte[] HandleGameEngineQuery(byte[] request)
         {
-            var s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
-            // Steam uses a packet size of 1400 bytes + IP/UDP headers. If a request or response needs more packets for the data it starts the packets with an additional header.
-            int packetSize = Values.ValveConstants.PacketSize;
-
-            s.SendTimeout = Values.ProjectConstants.SendTimeout;
-            s.ReceiveTimeout = Values.ProjectConstants.ReceiveTimeout;
-
-            try
+            using (var s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
             {
-                s.SendTo(request, endPoint);
-            }
-            catch (SocketException se)
-            {
-                throw new SourceEngineQueryException(ExceptionType.SocketSend, se);
-            }
+                // Steam uses a packet size of 1400 bytes + IP/UDP headers. If a request or response needs more packets for the data it starts the packets with an additional header.
+                int packetSize = Values.ValveConstants.PacketSize;
 
-            byte[] a2SResultBytes = new byte[packetSize];
+                s.SendTimeout = Values.ProjectConstants.SendTimeout;
+                s.ReceiveTimeout = Values.ProjectConstants.ReceiveTimeout;
 
-            try
-            {
-                s.ReceiveFrom(a2SResultBytes, ref endPoint);
-            }
-            catch (SocketException se)
-            {
-                throw new SourceEngineQueryException(ExceptionType.SocketReceive, se);
-            }
+                try
+                {
+                    s.SendTo(request, endPoint);
+                }
+                catch (SocketException se)
+                {
+                    throw new SourceEngineQueryException(ExceptionType.SocketSend, se);
+                }
 
-            return a2SResultBytes;
+                byte[] a2SResultBytes = new byte[packetSize];
+
+                try
+                {
+                    s.ReceiveFrom(a2SResultBytes, ref endPoint);
+                }
+                catch (SocketException se)
+                {
+                    throw new SourceEngineQueryException(ExceptionType.SocketReceive, se);
+                }
+
+                return a2SResultBytes;
+            }
         }
     }
 }

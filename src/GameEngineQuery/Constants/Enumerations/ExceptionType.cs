@@ -4,8 +4,10 @@
     {
         SocketSend,
         SocketReceive,
+        CouldNotOpenBattlefieldTcpConnection,
         CouldNotInitiateA2SInfoRequest,
         InvalidResponsePacketForA2SInfoRequest,
-        InvalidResponseHeaderForA2SInfoRequest
+        InvalidResponseHeaderForA2SInfoRequest,
+        InvalidResponsePacketForBattlefieldServerInfoRequest,
     }
 }

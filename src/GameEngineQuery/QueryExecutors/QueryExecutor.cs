@@ -5,7 +5,7 @@ using GameEngineQuery.Factories;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public abstract class QueryExecutor<P> : IQueryExecutor<P>
+    public abstract class QueryExecutor<TSI> : IQueryExecutor<TSI>
     {
         protected readonly IRequestFactory requestFactory;
 
@@ -34,7 +34,7 @@ namespace GameEngineQuery.QueryExecutors
             this.requestFactory = new RequestFactory();
         }
 
-        public abstract P GetServerInfo();
+        public abstract TSI GetServerInfo();
 
         protected abstract byte[] HandleGameEngineQuery(byte[] request);
     }

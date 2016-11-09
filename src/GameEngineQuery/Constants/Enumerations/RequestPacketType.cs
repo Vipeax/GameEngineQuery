@@ -2,6 +2,7 @@
 {
     public enum RequestPacketType
     {
-        A2SInfo
+        A2SInfo,
+        BattlefieldServerInfo,
     }
 }
