@@ -7,6 +7,6 @@ namespace ChivStatus.Controllers
     [Route("api/bfh")]
     public class BattlefieldHardlineQueryController : QueryController<BattlefieldHardlineQueryExecutor, BattlefieldHardlineServerInfo>
     {
-        protected override string KeyFormatStringPrefix => "BF";
+        protected override string KeyFormatStringPrefix => "BFH";
     }
 }
