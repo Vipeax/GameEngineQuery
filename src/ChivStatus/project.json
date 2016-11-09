@@ -1,4 +1,4 @@
-﻿{
+{
   "dependencies": {
     "Microsoft.NETCore.App": {
       "version": "1.0.1",
@@ -33,7 +33,7 @@
   "buildOptions": {
     "emitEntryPoint": true,
     "preserveCompilationContext": true,
-    "define": [ "AVALAN" ]
+    "define": []
   },
   "runtimeOptions": {
     "configProperties": {
@@ -50,8 +50,5 @@
   },
   "scripts": {
     "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
-  },
-  "configurations": {
-    "Avalan": {}
   }
 }
