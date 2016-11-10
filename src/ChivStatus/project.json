@@ -1,4 +1,4 @@
-{
+﻿{
   "dependencies": {
     "Microsoft.NETCore.App": {
       "version": "1.0.1",
@@ -18,7 +18,7 @@
     "Newtonsoft.Json": "9.0.2-beta1",
     "StackExchange.Redis": "1.1.608",
     "GameEngineQuery": "1.0.0-*",
-    "Microsoft.AspNetCore.Diagnostics": "1.0.0"},
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0",
   "tools": {
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
   },
