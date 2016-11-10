@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public abstract class BattlefieldQueryExecutor<TSI> : QueryExecutor<TSI> where TSI : BattlefieldServerInfo, new()
+    public abstract class BattlefieldQueryExecutor<TSI> : SocketQueryExecutor<TSI> where TSI : BattlefieldServerInfo, new()
     {
         protected byte[] ResponsePacket;
         protected int index;

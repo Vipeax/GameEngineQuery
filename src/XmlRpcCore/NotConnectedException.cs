@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace TMXmlRpcLib
+namespace XmlRpcCore
 {
-	// Token: 0x0200000C RID: 12
 	public class NotConnectedException : Exception
 	{
 	}

@@ -35,7 +35,5 @@ namespace GameEngineQuery.QueryExecutors
         }
 
         public abstract TSI GetServerInfo();
-
-        protected abstract byte[] HandleGameEngineQuery(byte[] request);
     }
 }

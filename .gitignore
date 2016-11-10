@@ -244,5 +244,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
-src/ChivStatus/Constants/Security.cs
 src/ChivStatus/Properties/PublishProfiles

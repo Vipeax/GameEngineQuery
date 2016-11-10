@@ -1,130 +1,120 @@
 ﻿using System;
 using System.Net;
 using GameEngineQuery.PacketModels;
-using TMXmlRpcLib;
 using System.Collections;
+using XmlRpcCore;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public struct SPlayerInfo
-    {
-        public string Login;
-
-        public string NickName;
-
-        public int PlayerId;
-
-        public int TeamId;
-
-        public int LadderRanking;
-
-        public int SpectatorStatus;
-
-        public int Flags;
-
-        public void SetDefault()
-        {
-            this.Login = "";
-            this.NickName = "";
-            this.PlayerId = 0;
-            this.TeamId = 0;
-            this.LadderRanking = 0;
-            this.SpectatorStatus = 0;
-            this.Flags = 0;
-        }
-    }
-
     public class TrackManiaQueryExecutor : QueryExecutor<TrackManiaServerInfo>
     {
-        private string level;
+        private string user;
         private string password;
 
-        public TrackManiaQueryExecutor(string ipAddress, ushort port, string level, string password) : base(ipAddress, port)
+        public TrackManiaQueryExecutor(string ipAddress, ushort port, string user, string password) : base(ipAddress, port)
         {
-            this.level = level;
+            this.user = user;
             this.password = password;
         }
 
-        public TrackManiaQueryExecutor(EndPoint endPoint, string level, string password) : base(endPoint)
+        public TrackManiaQueryExecutor(EndPoint endPoint, string user, string password) : base(endPoint)
         {
-            this.level = level;
+            this.user = user;
             this.password = password;
         }
 
         public override TrackManiaServerInfo GetServerInfo()
         {
-            var requestClient = new XmlRpcClient(this.endPoint);
-
-            GbxCall gbxCall = requestClient.Request("Authenticate", new object[]
-                            {
-                                "SuperAdmin",
-                                "SuperAdmin1fawefawefawefawefawefwefwa"
-                            });
-
-            var servername = GetServerName(requestClient);
-            Console.WriteLine(servername);
-
-            var playerList = GetPlayerList(requestClient, 32, 0, 1);
-
-            return new TrackManiaServerInfo()
+            using (var requestClient = new XmlRpcClient(this.endPoint))
             {
-                PlayerCount1 = (ushort)playerList.Length
-            };
-        }
 
-        protected override byte[] HandleGameEngineQuery(byte[] request)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        private string GetServerName(XmlRpcClient client)
-        {
-            GbxCall gbxCall = client.Request("GetServerName", new object[0]);
-            return gbxCall.Params[0].ToString();
-        }
-
-
-        private SPlayerInfo[] GetPlayerList(XmlRpcClient client, int MaxCount, int FirstIndex, int StructVersion = 1)
-        {
-            checked
-            {
-                SPlayerInfo[] result;
-                try
+                GbxCall gbxCall = requestClient.Request("Authenticate", new object[]
                 {
-                    GbxCall gbxCall = client.Request("GetPlayerList", new object[]
-                    {
-                        MaxCount,
-                        FirstIndex,
-                        StructVersion
-                    });
-                    ArrayList arrayList = new ArrayList();
-                    arrayList = (ArrayList)gbxCall.Params[0];
-                    SPlayerInfo[] array = new SPlayerInfo[arrayList.Count - 1 + 1];
-                    int arg_6C_0 = 0;
-                    int num = arrayList.Count - 1;
-                    for (int i = arg_6C_0; i <= num; i++)
-                    {
+                    this.user,
+                    this.password
+                });
 
-                        dynamic obj = arrayList[i];
+                if (gbxCall.HasError == false && gbxCall.Params[0].Equals(true))
+                {
+                    var count = this.GetPlayerCount(requestClient, 256, 0).GetValueOrDefault(0);
+                    var mapInfo = this.GetCurrentMapInfo(requestClient);
+                    var serverOptions = this.GetServerOptions(requestClient);
 
-                        array[i].Login = obj.Login.ToString();
-                        array[i].NickName = obj.NickName.ToString();
-                        array[i].PlayerId = int.Parse(obj.PlayerId.ToString());
-                        array[i].TeamId = int.Parse(obj.TeamId.ToString());
-                        array[i].SpectatorStatus = int.Parse(obj.SpectatorStatus.ToString());
-                        array[i].LadderRanking = int.Parse(obj.LadderRanking.ToString());
-                        array[i].Flags = int.Parse(obj.Flags.ToString());
+                    if (mapInfo.Count > 0)
+                    {
+                        return new TrackManiaServerInfo
+                        {
+                            Name = serverOptions.Item1,
+                            CurrentMapName = mapInfo["Name"] as string,
+                            CurrentMaxPlayers = serverOptions.Item2,
+                            CurrentPlayerCount = count,
+                            MapType = mapInfo["MapType"] as string,
+                            Mood = mapInfo["Mood"] as string,
+                            Environment = mapInfo["Environment"] as string,
+                            CopperPrice = Convert.ToUInt32(mapInfo["CopperPrice"]),
+                            LapRace = Convert.ToBoolean(mapInfo["LapRace"]),
+                            BronzeTime = Convert.ToUInt32(mapInfo["BronzeTime"]),
+                            SilverTime = Convert.ToUInt32(mapInfo["SilverTime"]),
+                            GoldTime = Convert.ToUInt32(mapInfo["GoldTime"]),
+                            UId = mapInfo["UId"] as string,
+                            NbCheckpoints = Convert.ToUInt16(mapInfo["NbCheckpoints"]),
+                            NbLaps = Convert.ToUInt16(mapInfo["NbLaps"]),
+                            FileName = mapInfo["FileName"] as string,
+                            Author = mapInfo["Author"] as string,
+                            MapStyle = mapInfo["MapStyle"] as string,
+                            AuthorTime = Convert.ToUInt32(mapInfo["AuthorTime"])
+                        };
                     }
-                    result = array;
                 }
-                catch (Exception arg_1EB_0)
-                {
-                    result = new SPlayerInfo[0];
-                }
-                return result;
+
+                return new TrackManiaServerInfo();
             }
         }
 
+        private Tuple<string, ushort> GetServerOptions(XmlRpcClient client)
+        {
+            GbxCall gbxCall = client.Request("GetServerOptions", new object[0]);
+
+            if (gbxCall.HasError == false)
+            {
+                var hashTable = gbxCall.Params[0] as Hashtable;
+
+                if (hashTable != null)
+                {
+                    return new Tuple<string, ushort>(hashTable["Name"] as string, Convert.ToUInt16(hashTable["CurrentMaxPlayers"]));
+                }
+            }
+
+            return new Tuple<string, ushort>(default(string), default(ushort));
+        }
+
+        private Hashtable GetCurrentMapInfo(XmlRpcClient client)
+        {
+            GbxCall gbxCall = client.Request("GetCurrentMapInfo", new object[0]);
+
+            if (gbxCall.HasError == false)
+            {
+                return gbxCall.Params[0] as Hashtable;
+            }
+
+            return new Hashtable();
+        }
+
+        private ushort? GetPlayerCount(XmlRpcClient client, int maxCount, int firstIndex, int structVersion = 1)
+        {
+            GbxCall gbxCall = client.Request("GetPlayerList", new object[]
+            {
+                maxCount,
+                firstIndex,
+                structVersion
+            });
+
+            if (gbxCall.HasError == false)
+            {
+                return (ushort?) (gbxCall.Params[0] as ArrayList)?.Count;
+            }
+
+            return 0;
+        }
     }
 }
