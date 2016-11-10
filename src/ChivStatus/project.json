@@ -18,37 +18,37 @@
     "Newtonsoft.Json": "9.0.2-beta1",
     "StackExchange.Redis": "1.1.608",
     "GameEngineQuery": "1.0.0-*",
-    "Microsoft.AspNetCore.Diagnostics": "1.0.0",
-  "tools": {
-    "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
-  },
-  "frameworks": {
-    "netcoreapp1.0": {
-      "imports": [
-        "dotnet5.6",
-        "portable-net45+win8"
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0"},
+    "tools": {
+      "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
+    },
+    "frameworks": {
+      "netcoreapp1.0": {
+        "imports": [
+          "dotnet5.6",
+          "portable-net45+win8"
+        ]
+      }
+    },
+    "buildOptions": {
+      "emitEntryPoint": true,
+      "preserveCompilationContext": true,
+      "define": []
+    },
+    "runtimeOptions": {
+      "configProperties": {
+        "System.GC.Server": true
+      }
+    },
+    "publishOptions": {
+      "include": [
+        "wwwroot",
+        "**/*.cshtml",
+        "appsettings.json",
+        "web.config"
       ]
+    },
+    "scripts": {
+      "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
     }
-  },
-  "buildOptions": {
-    "emitEntryPoint": true,
-    "preserveCompilationContext": true,
-    "define": []
-  },
-  "runtimeOptions": {
-    "configProperties": {
-      "System.GC.Server": true
-    }
-  },
-  "publishOptions": {
-    "include": [
-      "wwwroot",
-      "**/*.cshtml",
-      "appsettings.json",
-      "web.config"
-    ]
-  },
-  "scripts": {
-    "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
-  }
-}
+ }

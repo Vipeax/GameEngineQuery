@@ -106,15 +106,15 @@ namespace GameEngineQuery.QueryExecutors
                     for (int i = arg_6C_0; i <= num; i++)
                     {
 
-                        dynamic dinges = arrayList[i];
+                        dynamic obj = arrayList[i];
 
-                        array[i].Login = dinges.Login.ToString();
-                        array[i].NickName = dinges.NickName.ToString();
-                        array[i].PlayerId = int.Parse(dinges.PlayerId.ToString());
-                        array[i].TeamId = int.Parse(dinges.TeamId.ToString());
-                        array[i].SpectatorStatus = int.Parse(dinges.SpectatorStatus.ToString());
-                        array[i].LadderRanking = int.Parse(dinges.LadderRanking.ToString());
-                        array[i].Flags = int.Parse(dinges.Flags.ToString());
+                        array[i].Login = obj.Login.ToString();
+                        array[i].NickName = obj.NickName.ToString();
+                        array[i].PlayerId = int.Parse(obj.PlayerId.ToString());
+                        array[i].TeamId = int.Parse(obj.TeamId.ToString());
+                        array[i].SpectatorStatus = int.Parse(obj.SpectatorStatus.ToString());
+                        array[i].LadderRanking = int.Parse(obj.LadderRanking.ToString());
+                        array[i].Flags = int.Parse(obj.Flags.ToString());
                     }
                     result = array;
                 }
