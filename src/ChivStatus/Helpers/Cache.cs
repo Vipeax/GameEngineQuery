@@ -37,7 +37,7 @@ namespace ChivStatus.Helpers
             {
                 try
                 {
-                    cacheDb.StringSet(key, JsonConvert.SerializeObject(result), new TimeSpan(0, 5, 0));
+                    cacheDb.StringSet(key, JsonConvert.SerializeObject(result), new TimeSpan(0, 0, 3));
                 }
                 catch
                 {

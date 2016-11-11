@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Reflection;
 using System.Text;
+using ChivStatus.BackgroundProcesses;
 using ChivStatus.CustomTypes;
 using ChivStatus.Exceptions;
 using GameEngineQuery.Exceptions;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -45,8 +48,8 @@ namespace ChivStatus
         {
             // Add framework services.
             services.AddMvc();
+            services.AddHangfire(x => x.UseStorage(new MemoryStorage()));
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -116,6 +119,9 @@ namespace ChivStatus
             });
 
             app.UseMvc();
+            app.UseStaticFiles();
+            app.UseHangfireServer(additionalProcesses: new[] { new BackgroundServerWatcher() });
+            app.UseHangfireDashboard();
         }
     }
 }

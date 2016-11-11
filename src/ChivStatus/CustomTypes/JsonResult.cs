@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ChivStatus.CustomTypes
 {
@@ -29,8 +30,26 @@ namespace ChivStatus.CustomTypes
                 ? ContentType
                 : "application/json";
 
-            var serializedObject = JsonConvert.SerializeObject(Value);
+            var serializedObject = JsonConvert.SerializeObject(Value, new StringEnumConverter());
             response.WriteAsync(serializedObject);
+        }
+
+        public override Task ExecuteResultAsync(ActionContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            var response = context.HttpContext.Response;
+
+            response.ContentType = !string.IsNullOrEmpty(ContentType)
+                ? ContentType
+                : "application/json";
+
+            var serializedObject = JsonConvert.SerializeObject(Value, new StringEnumConverter());
+
+            return response.WriteAsync(serializedObject);
         }
     }
 }

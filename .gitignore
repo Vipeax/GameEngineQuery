@@ -245,3 +245,6 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 src/ChivStatus/Properties/PublishProfiles
+/src/ChivStatus/Controllers/StatsController.cs
+/src/ChivStatus/Views
+/src/ChivStatus/wwwroot

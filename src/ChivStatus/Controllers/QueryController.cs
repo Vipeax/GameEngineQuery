@@ -9,7 +9,7 @@ using JsonResult = ChivStatus.CustomTypes.JsonResult;
 
 namespace ChivStatus.Controllers
 {
-    public abstract class QueryController<TQE,TSI> : Controller where TQE : IQueryExecutor<TSI> where TSI : ServerInfo
+    public abstract class QueryController<TQE,TSI> : Controller where TQE : IQueryExecutor<TSI> where TSI : ServerInfo, new()
     {
         protected abstract string KeyFormatStringPrefix { get; }
 
