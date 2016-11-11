@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace ChivStatus.CustomTypes
 {
@@ -30,7 +31,8 @@ namespace ChivStatus.CustomTypes
                 ? ContentType
                 : "application/json";
 
-            var serializedObject = JsonConvert.SerializeObject(Value, new StringEnumConverter {CamelCaseText = true});
+            var serializedObject = JsonConvert.SerializeObject(Value, this.CreateSerializerSettings());
+
             response.WriteAsync(serializedObject);
         }
 
@@ -47,9 +49,18 @@ namespace ChivStatus.CustomTypes
                 ? ContentType
                 : "application/json";
 
-            var serializedObject = JsonConvert.SerializeObject(Value, new StringEnumConverter {CamelCaseText = true});
+            var serializedObject = JsonConvert.SerializeObject(Value, this.CreateSerializerSettings());
 
             return response.WriteAsync(serializedObject);
+        }
+
+        private JsonSerializerSettings CreateSerializerSettings()
+        {
+            return new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters = { new StringEnumConverter() }
+            };
         }
     }
 }

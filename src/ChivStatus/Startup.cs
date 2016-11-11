@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace ChivStatus
 {
@@ -34,7 +35,8 @@ namespace ChivStatus
             {
                 var settings = new JsonSerializerSettings();
                 settings.Formatting = Formatting.Indented;
-                settings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
+                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                settings.Converters.Add(new StringEnumConverter());
                 return settings;
             };
 
