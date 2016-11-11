@@ -30,7 +30,7 @@ namespace ChivStatus.CustomTypes
                 ? ContentType
                 : "application/json";
 
-            var serializedObject = JsonConvert.SerializeObject(Value, new StringEnumConverter());
+            var serializedObject = JsonConvert.SerializeObject(Value, new StringEnumConverter {CamelCaseText = true});
             response.WriteAsync(serializedObject);
         }
 
