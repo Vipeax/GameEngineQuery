@@ -11,7 +11,7 @@ namespace ChivStatus.Controllers
     [Route("api/tm")]
     public class TrackmaniaController
     {
-        protected string KeyFormatStringPrefix { get; }
+        protected string KeyFormatStringPrefix => "TM";
 
         [HttpGet("{ip}/{port}/{user}/{password}")]
         public virtual JsonResult Get(string ip, ushort port, string user, string password)
