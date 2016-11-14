@@ -6,7 +6,7 @@ using GameEngineQuery.PacketModels;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public class BattlefieldBadCompany2QueryExecutor : BattlefieldQueryExecutor<BattlefieldBadCompany2ServerInfo>
+    public class BattlefieldBadCompany2QueryExecutor : BattlefieldQueryExecutor<BattlefieldBadCompany2ServerInfo, BattlefieldPlayerInfo>
     {
         public BattlefieldBadCompany2QueryExecutor(string ipAddress, ushort port) : base(ipAddress, port)
         {

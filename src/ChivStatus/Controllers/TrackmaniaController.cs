@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using ChivStatus.Exceptions;
 using ChivStatus.Helpers;
@@ -14,24 +15,42 @@ namespace ChivStatus.Controllers
         protected string KeyFormatStringPrefix => "TM";
 
         [HttpGet("{ip}/{port}/{user}/{password}")]
-        public virtual JsonResult Get(string ip, ushort port, string user, string password)
+        public virtual JsonResult GetServerInfo(string ip, ushort port, string user, string password)
         {
-            var key = string.Format(CultureInfo.InvariantCulture, "{0}-Address({1}:{2})", this.KeyFormatStringPrefix, ip,
+            var key = string.Format(CultureInfo.InvariantCulture, "SI-{0}-Address({1}:{2})", this.KeyFormatStringPrefix, ip,
                 port);
 
-            return new JsonResult(Cache.GetOrStoreInCache(key, () => GetQueryResult(ip, port, user, password)));
+            return new JsonResult(Cache.GetOrStoreInCache(key, () => this.GetServerInfoQueryResult(ip, port, user, password)));
         }
 
         [HttpGet("{address}/{user}/{password}")]
-        public virtual JsonResult Get(string address, string user, string password)
+        public virtual JsonResult GetServerInfo(string address, string user, string password)
         {
-            var key = string.Format(CultureInfo.InvariantCulture, "{0}-Address({1})", this.KeyFormatStringPrefix,
+            var key = string.Format(CultureInfo.InvariantCulture, "SI-{0}-Address({1})", this.KeyFormatStringPrefix,
                 address);
 
-            return new JsonResult(Cache.GetOrStoreInCache(key, () => GetQueryResult(address, user, password)));
+            return new JsonResult(Cache.GetOrStoreInCache(key, () => this.GetServerInfoQueryResult(address, user, password)));
         }
 
-        protected virtual TrackManiaServerInfo GetQueryResult(string address, string user, string password)
+        [HttpGet("pi/{ip}/{port}/{user}/{password}")]
+        public virtual JsonResult GetPlayerInfo(string ip, ushort port, string user, string password)
+        {
+            var key = string.Format(CultureInfo.InvariantCulture, "PI-{0}-Address({1}:{2})", this.KeyFormatStringPrefix, ip,
+                port);
+
+            return new JsonResult(Cache.GetOrStoreInCache(key, () => this.GetPlayerInfoQueryResult(ip, port, user, password)));
+        }
+
+        [HttpGet("pi/{address}/{user}/{password}")]
+        public virtual JsonResult GetPlayerInfo(string address, string user, string password)
+        {
+            var key = string.Format(CultureInfo.InvariantCulture, "PI-{0}-Address({1})", this.KeyFormatStringPrefix,
+                address);
+
+            return new JsonResult(Cache.GetOrStoreInCache(key, () => this.GetPlayerInfoQueryResult(address, user, password)));
+        }
+
+        protected virtual TrackManiaServerInfo GetServerInfoQueryResult(string address, string user, string password)
         {
             if (address.Contains(":"))
             {
@@ -42,7 +61,7 @@ namespace ChivStatus.Controllers
                 {
                     try
                     {
-                        return this.GetQueryResult(splitted[0], port, user, password);
+                        return this.GetServerInfoQueryResult(splitted[0], port, user, password);
                     }
                     catch (FormatException)
                     {
@@ -56,18 +75,62 @@ namespace ChivStatus.Controllers
             throw new InvalidAddressFormatException();
         }
 
-        protected virtual TrackManiaServerInfo GetQueryResult(string ip, ushort port, string user, string password)
+        protected virtual TrackManiaServerInfo GetServerInfoQueryResult(string ip, ushort port, string user, string password)
         {
             if (port == 0)
             {
                 throw new InvalidPortException();
             }
 
-            IQueryExecutor<TrackManiaServerInfo> queryExecutor = new TrackManiaQueryExecutor(ip, port, user, password);
+            IQueryExecutor<TrackManiaServerInfo, TrackManiaPlayerInfo> queryExecutor = new TrackManiaQueryExecutor(ip, port, user, password);
 
             try
             {
                 return queryExecutor.GetServerInfo();
+            }
+            catch (FormatException)
+            {
+                throw new InvalidIpAddressException();
+            }
+        }
+
+        protected virtual IReadOnlyCollection<TrackManiaPlayerInfo> GetPlayerInfoQueryResult(string address, string user, string password)
+        {
+            if (address.Contains(":"))
+            {
+                var splitted = address.Split(':');
+
+                ushort port;
+                if (ushort.TryParse(splitted[1], out port))
+                {
+                    try
+                    {
+                        return this.GetPlayerInfoQueryResult(splitted[0], port, user, password);
+                    }
+                    catch (FormatException)
+                    {
+                        throw new InvalidIpAddressException();
+                    }
+                }
+
+                throw new InvalidPortException();
+            }
+
+            throw new InvalidAddressFormatException();
+        }
+
+        protected virtual IReadOnlyCollection<TrackManiaPlayerInfo> GetPlayerInfoQueryResult(string ip, ushort port, string user, string password)
+        {
+            if (port == 0)
+            {
+                throw new InvalidPortException();
+            }
+
+            IQueryExecutor<TrackManiaServerInfo, TrackManiaPlayerInfo> queryExecutor = new TrackManiaQueryExecutor(ip, port, user, password);
+
+            try
+            {
+                return queryExecutor.GetPlayerInfo();
             }
             catch (FormatException)
             {

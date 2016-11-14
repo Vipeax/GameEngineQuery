@@ -36,6 +36,21 @@ namespace GameEngineQuery.Extensions
                 return (T) Convert.ChangeType(BitConverter.ToInt32(valueBuffer, 0), typeof(T));
             }
 
+            if (typeof(T) == typeof(float))
+            {
+                return (T)Convert.ChangeType(BitConverter.ToSingle(valueBuffer, 0), typeof(T));
+            }
+
+            if (typeof(T) == typeof(uint))
+            {
+                return (T)Convert.ChangeType(BitConverter.ToUInt32(valueBuffer, 0), typeof(T));
+            }
+
+            if (typeof(T) == typeof(long))
+            {
+                return (T) Convert.ChangeType(BitConverter.ToInt64(valueBuffer, 0), typeof(T));
+            }
+
             return default(T);
         }
 

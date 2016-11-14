@@ -26,7 +26,13 @@ namespace GameEngineQuery.Exceptions
                 case ExceptionType.InvalidResponseHeaderForA2SInfoRequest:
                     return "Invalid response header received for A2S Info request call.";
                 case ExceptionType.InvalidResponsePacketForA2SInfoRequest:
-                    return "Invalid response packet received for A2S Info request call.";
+                    return "Invalid response packet received for A2S Player request call.";
+                    case ExceptionType.CouldNotInitiateA2SPlayerRequest:
+                    return "Could not initiate A2SPlayer request.";
+                case ExceptionType.InvalidResponseHeaderForA2SPlayerRequest:
+                    return "Invalid response header received for A2S Player request call.";
+                case ExceptionType.InvalidResponsePacketForA2SPlayerRequest:
+                    return "Invalid response packet received for A2S Player request call.";
             }
 
             return string.Empty;
@@ -46,6 +52,12 @@ namespace GameEngineQuery.Exceptions
                     return $"Invalid response header received for A2S Info request call {{{message}}}.";
                 case ExceptionType.InvalidResponsePacketForA2SInfoRequest:
                     return $"Invalid response packet received for A2S Info request call {{{message}}}.";
+                case ExceptionType.CouldNotInitiateA2SPlayerRequest:
+                    return $"Could not initiate A2SPlayer request {{{message}}}.";
+                case ExceptionType.InvalidResponseHeaderForA2SPlayerRequest:
+                    return $"Invalid response header received for A2S Player request call {{{message}}}.";
+                case ExceptionType.InvalidResponsePacketForA2SPlayerRequest:
+                    return $"Invalid response packet received for A2S Player request call {{{message}}}.";
             }
 
             return message;

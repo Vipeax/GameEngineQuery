@@ -9,13 +9,13 @@ namespace ChivStatus.BackgroundProcesses
     {
         public void Execute(BackgroundProcessContext context)
         {
-            this.GetValue();
+           // this.GetValue();
             context.Wait(new TimeSpan(0, 0, 5));
         }
 
         private void GetValue()
         {
-            IQueryExecutor<A2SInfo> queryExecutor = new SourceEngineQueryExecutor("164.132.204.204", 2303);
+            IQueryExecutor<A2SInfo, A2SPlayer> queryExecutor = new SourceEngineQueryExecutor("66.150.121.148", 27019);
             queryExecutor.GetServerInfo();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using GameEngineQuery.Constants;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public abstract class BattlefieldQueryExecutor<TSI> : SocketQueryExecutor<TSI> where TSI : BattlefieldServerInfo, new()
+    public abstract class BattlefieldQueryExecutor<TSI, PSI> : SocketQueryExecutor<TSI, PSI> where TSI : BattlefieldServerInfo, new() where PSI : BattlefieldPlayerInfo, new()
     {
         protected byte[] ResponsePacket;
         protected int index;
@@ -82,11 +83,81 @@ namespace GameEngineQuery.QueryExecutors
             return info;
         }
 
+        public override IReadOnlyCollection<PSI> GetPlayerInfo()
+        {
+            var requestPacket = requestFactory.CreateRequestPacket(RequestPacketType.BattlefieldPlayerInfo);
+
+            try
+            {
+                this.ResponsePacket = this.HandleGameEngineQuery(requestPacket);
+            }
+            catch (Exception exception)
+            {
+                throw new BattlefieldQueryException(ExceptionType.CouldNotOpenBattlefieldTcpConnection, exception);
+            }
+
+            if (this.ResponsePacket[16] != 0x4F || this.ResponsePacket[17] != 0x4B)
+            {
+                throw new BattlefieldQueryException(ExceptionType.InvalidResponsePacketForBattlefieldPlayerInfoRequest);
+            }
+
+            this.originalLength = this.ResponsePacket.Length;
+
+            var players = new List<PSI>();
+            var keys = new List<string>();
+
+            var padding = this.ResponsePacket[this.index++];
+            var padding2 = this.ResponsePacket[this.index++];
+            var padding3 = this.ResponsePacket[this.index++];
+            var padding4 = this.ResponsePacket[this.index++];
+            var padding5 = this.ResponsePacket[this.index++];
+            var padding6 = this.ResponsePacket[this.index++];
+            var padding7 = this.ResponsePacket[this.index++];
+            var padding8 = this.ResponsePacket[this.index++];
+            var padding9 = this.ResponsePacket[this.index++];
+            var padding10 = this.ResponsePacket[this.index++];
+            var padding11 = this.ResponsePacket[this.index++];
+            var padding12 = this.ResponsePacket[this.index++];
+            var responseCode = this.GetNextDataAsString();
+            var keyCount = this.GetNextDataAsUshort();
+
+            for (int i = 0; i < keyCount; i++)
+            {
+                keys.Add(this.GetNextDataAsString());
+            }
+
+            var playerCount = this.GetNextDataAsUint();
+
+            for (int i = 0; i < playerCount; i++)
+            {
+                players.Add(new PSI
+                {
+                    Index = (byte) i,
+                    Name = this.GetNextDataAsString(),
+                    Guid = this.GetNextDataAsString(),
+                    Team = this.GetNextDataAsString(),
+                    Squad = this.GetNextDataAsString(),
+                    Kills = this.GetNextDataAsInt(),
+                    Deaths = this.GetNextDataAsInt(),
+                    Score = this.GetNextDataAsInt(),
+                    Rank = this.GetNextDataAsInt(),
+                    Ping = this.GetNextDataAsInt()
+                });
+
+                for (int j = 0; j < keyCount - 9; j++)
+                {
+                    this.GetNextDataAsString();
+                }
+            }
+
+            return players;
+        }
+
         protected override byte[] HandleGameEngineQuery(byte[] request)
         {
             using (var s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
             {
-                int packetSize = Values.BattlefieldConstants.ServerInfo.ResponsePacketSize;
+                int packetSize = Values.BattlefieldConstants.PlayerInfo.ResponsePacketSize;
 
                 s.SendTimeout = Values.ProjectConstants.SendTimeout;
                 s.ReceiveTimeout = Values.ProjectConstants.ReceiveTimeout;
@@ -145,6 +216,11 @@ namespace GameEngineQuery.QueryExecutors
         protected uint GetNextDataAsUint()
         {
             return Convert.ToUInt32(this.GetNextDataAsString());
+        }
+
+        protected int GetNextDataAsInt()
+        {
+            return Convert.ToInt32(this.GetNextDataAsString());
         }
 
         protected ushort GetNextDataAsUshort()

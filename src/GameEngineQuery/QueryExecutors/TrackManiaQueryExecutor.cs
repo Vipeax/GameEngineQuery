@@ -2,14 +2,15 @@
 using System.Net;
 using GameEngineQuery.PacketModels;
 using System.Collections;
+using System.Collections.Generic;
 using XmlRpcCore;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public class TrackManiaQueryExecutor : QueryExecutor<TrackManiaServerInfo>
+    public class TrackManiaQueryExecutor : QueryExecutor<TrackManiaServerInfo, TrackManiaPlayerInfo>
     {
-        private string user;
-        private string password;
+        private readonly string user;
+        private readonly string password;
 
         public TrackManiaQueryExecutor(string ipAddress, ushort port, string user, string password) : base(ipAddress, port)
         {
@@ -71,6 +72,14 @@ namespace GameEngineQuery.QueryExecutors
             }
         }
 
+        public override IReadOnlyCollection<TrackManiaPlayerInfo> GetPlayerInfo()
+        {
+            using (var requestClient = new XmlRpcClient(this.endPoint))
+            {
+                return this.GetPlayers(requestClient, 256, 0);
+            }
+        }
+
         private Tuple<string, ushort> GetServerOptions(XmlRpcClient client)
         {
             GbxCall gbxCall = client.Request("GetServerOptions", new object[0]);
@@ -115,6 +124,50 @@ namespace GameEngineQuery.QueryExecutors
             }
 
             return 0;
+        }
+
+        private IReadOnlyCollection<TrackManiaPlayerInfo> GetPlayers(XmlRpcClient client, int maxCount, int firstIndex, int structVersion = 1)
+        {
+            GbxCall gbxCall = client.Request("GetPlayerList", new object[]
+            {
+                maxCount,
+                firstIndex,
+                structVersion
+            });
+
+            if (gbxCall.HasError == false)
+            {
+                var playerList = gbxCall.Params[0] as ArrayList;
+
+                if (playerList != null)
+                {
+                    var players = new List<TrackManiaPlayerInfo>();
+
+                    for (byte i = 0; i < playerList.Count; i++)
+                    {
+                        var playerData = playerList[i] as Hashtable;
+
+                        if (playerData != null)
+                        {
+                            players.Add(new TrackManiaPlayerInfo
+                            {
+                                Index = i,
+                                Flags = playerData["Flags"] as int? ?? 0,
+                                TeamId = playerData["TeamId"] as int? ?? 0,
+                                Login = playerData["Login"] as string,
+                                NickName = playerData["NickName"] as string,
+                                SpectatorStatus = playerData["SpectatorStatus"] as byte? ?? 0,
+                                PlayerId = playerData["PlayerId"] as int? ?? 0,
+                                LadderRanking = playerData["LadderRanking"] as int? ?? 0
+                        });
+                        }
+                    }
+
+                    return players;
+                }
+            }
+
+            return new List<TrackManiaPlayerInfo>();
         }
     }
 }

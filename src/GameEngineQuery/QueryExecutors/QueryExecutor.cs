@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using GameEngineQuery.Extensions;
 using GameEngineQuery.Factories;
+using GameEngineQuery.PacketModels;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public abstract class QueryExecutor<TSI> : IQueryExecutor<TSI>
+    public abstract class QueryExecutor<TSI, TPI> : IQueryExecutor<TSI, TPI> where TSI : ServerInfo, new() where TPI : PlayerInfo, new()
     {
         protected readonly IRequestFactory requestFactory;
 
@@ -35,5 +37,7 @@ namespace GameEngineQuery.QueryExecutors
         }
 
         public abstract TSI GetServerInfo();
+
+        public abstract IReadOnlyCollection<TPI> GetPlayerInfo();
     }
 }

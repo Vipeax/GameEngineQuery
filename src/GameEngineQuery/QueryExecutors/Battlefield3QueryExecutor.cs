@@ -3,7 +3,7 @@ using GameEngineQuery.PacketModels;
 
 namespace GameEngineQuery.QueryExecutors
 {
-    public class Battlefield3QueryExecutor : BattlefieldQueryExecutor<Battlefield3ServerInfo>
+    public class Battlefield3QueryExecutor : BattlefieldQueryExecutor<Battlefield3ServerInfo, BattlefieldPlayerInfo>
     {
         public Battlefield3QueryExecutor(string ipAddress, ushort port) : base(ipAddress, port)
         {

@@ -7,7 +7,7 @@ namespace GameEngineQuery.Constants
         internal static class ValveConstants
         {
             internal const ushort HeaderLength = 4;
-            internal const ushort PacketSize = 1400;
+            internal const ushort PacketSize = 16384;
 
             internal static class A2SInfo
             {
@@ -30,6 +30,19 @@ namespace GameEngineQuery.Constants
                 };
 
                 internal const ushort ResponsePacketSize = 512;
+            }
+
+            internal static class PlayerInfo
+            {
+                internal static readonly byte[] PlayerInfoPacket =
+                {
+                    0x0, 0x0, 0x0, 0x0, 0x24, 0x0, 0x0, 0x0, 0x02, 0x0, 0x0, 0x0, 0x0B, 0x0, 0x0, 0x0,
+                    (byte) 'l', (byte) 'i', (byte) 's', (byte) 't',
+                    (byte) 'P', (byte) 'l', (byte) 'a', (byte) 'y', (byte) 'e', (byte) 'r', (byte) 's',
+                    0x0, 0x03, 0x0, 0x0, 0x0, (byte) 'a', (byte) 'l', (byte) 'l', 0x0
+                };
+
+                internal const ushort ResponsePacketSize = 16384;
             }
         }
 
