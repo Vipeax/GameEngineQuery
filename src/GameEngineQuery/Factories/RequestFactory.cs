@@ -17,6 +17,8 @@ namespace GameEngineQuery.Factories
                     return new BattlefieldServerInfoPacket().CreateRequest();
                 case RequestPacketType.BattlefieldPlayerInfo:
                     return new BattlefieldPlayerInfoPacket().CreateRequest();
+                case RequestPacketType.Quake3GetStatus:
+                    return new Quake3GetStatusPacket().CreateRequest();
                 default:
                     return new byte[0];
             }

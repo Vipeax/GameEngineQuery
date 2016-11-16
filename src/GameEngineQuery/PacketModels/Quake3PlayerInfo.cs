@@ -1,11 +1,11 @@
 ﻿namespace GameEngineQuery.PacketModels
 {
-    public class A2SPlayer : PlayerInfo
+    public class Quake3PlayerInfo : PlayerInfo
     {
-        public int Index { get; set; }
+        public ushort Index { get; set; }
         public string Name { get; set; }
         public long Score { get; set; }
-        public float Duration { get; set; }
+        public int Ping { get; set; }
 
         public override int Id => this.Index;
         public override string PlayerName => this.Name;

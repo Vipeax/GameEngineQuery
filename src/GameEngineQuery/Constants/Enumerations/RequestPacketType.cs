@@ -5,6 +5,7 @@
         A2SInfo,
         A2SPlayer,
         BattlefieldServerInfo,
-        BattlefieldPlayerInfo
+        BattlefieldPlayerInfo,
+        Quake3GetStatus
     }
 }

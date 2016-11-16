@@ -151,7 +151,6 @@ namespace GameEngineQuery.QueryExecutors
         {
             using (var s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
             {
-                // Steam uses a packet size of 1400 bytes + IP/UDP headers. If a request or response needs more packets for the data it starts the packets with an additional header.
                 int packetSize = Values.ValveConstants.PacketSize;
 
                 s.SendTimeout = Values.ProjectConstants.SendTimeout;

@@ -13,5 +13,8 @@
         InvalidResponseHeaderForA2SPlayerRequest,
         InvalidResponsePacketForBattlefieldServerInfoRequest,
         InvalidResponsePacketForBattlefieldPlayerInfoRequest,
+        CouldNotInitiateGetStatusRequest,
+        InvalidResponsePacketForGetStatusRequest,
+        InvalidResponseChallengeForGetStatusRequest
     }
 }

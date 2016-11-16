@@ -46,6 +46,22 @@ namespace GameEngineQuery.Constants
             }
         }
 
+        internal static class Quake3Constants
+        {
+            internal const ushort HeaderLength = 4;
+            internal const ushort PacketSize = 16384;
+
+            internal static class GetStatus
+            {
+                internal static readonly byte[] GetStatusPacket =
+                {
+                    0xFF, 0xFF, 0XFF, 0xFF,
+                    (byte) 'g', (byte) 'e', (byte) 't',
+                    (byte) 's', (byte) 't', (byte) 'a', (byte) 't', (byte) 'u', (byte) 's'
+                };
+            }
+        }
+
         internal static class ProjectConstants
         {
             internal const ushort SendTimeout = 3000;

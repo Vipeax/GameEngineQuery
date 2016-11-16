@@ -10,7 +10,7 @@ using JsonResult = ChivStatus.CustomTypes.JsonResult;
 
 namespace ChivStatus.Controllers
 {
-    public abstract class QueryController<TQE,TSI, TPI> : Controller where TQE : IQueryExecutor<TSI, TPI> where TSI : ServerInfo, new() where TPI : PlayerInfo, new()
+    public abstract class QueryController<TQE, TSI, TPI> : Controller where TQE : IQueryExecutor<TSI, TPI> where TSI : ServerInfo, new() where TPI : PlayerInfo, new()
     {
         protected abstract string KeyFormatStringPrefix { get; }
 
@@ -82,7 +82,7 @@ namespace ChivStatus.Controllers
                 throw new InvalidPortException();
             }
 
-            IQueryExecutor<TSI,TPI> queryExecutor = Activator.CreateInstance(typeof(TQE), ip, port) as IQueryExecutor<TSI, TPI>;
+            IQueryExecutor<TSI, TPI> queryExecutor = Activator.CreateInstance(typeof(TQE), ip, port) as IQueryExecutor<TSI, TPI>;
 
             if (queryExecutor != null)
             {

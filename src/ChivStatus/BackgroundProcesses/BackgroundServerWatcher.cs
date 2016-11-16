@@ -9,7 +9,7 @@ namespace ChivStatus.BackgroundProcesses
     {
         public void Execute(BackgroundProcessContext context)
         {
-           // this.GetValue();
+            this.GetValue();
             context.Wait(new TimeSpan(0, 0, 5));
         }
 
