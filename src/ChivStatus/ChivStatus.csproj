@@ -8,6 +8,13 @@
     <PackageId>ChivStatus</PackageId>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
+	
+	<Version>1.0.0.0</Version>
+    <Title>ChivStatus</Title>
+    <Authors>Vipeax</Authors>
+    <Description>ChivStatus api project</Description>
+    <PackageProjectUrl>https://github.com/Vipeax/GameEngineQuery</PackageProjectUrl>
+    <PackageTags>game;engine;query;stats</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
